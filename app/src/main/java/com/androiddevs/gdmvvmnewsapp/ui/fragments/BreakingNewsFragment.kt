@@ -1,63 +1,82 @@
 package com.androiddevs.gdmvvmnewsapp.ui.fragments
 
 import android.os.Bundle
-import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
+import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
+import androidx.paging.ExperimentalPagingApi
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.androiddevs.gdmvvmnewsapp.R
 import com.androiddevs.gdmvvmnewsapp.adapter.NewsAdapter
-import com.androiddevs.gdmvvmnewsapp.ui.NewsActivity
+import com.androiddevs.gdmvvmnewsapp.databinding.FragmentBreakingNewsBinding
+import com.androiddevs.gdmvvmnewsapp.models.Article
 import com.androiddevs.gdmvvmnewsapp.ui.NewsViewModel
-import com.androiddevs.gdmvvmnewsapp.util.Resource
-import kotlinx.android.synthetic.main.fragment_breaking_news.*
+import com.androiddevs.gdmvvmnewsapp.util.Status
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
-    lateinit var viewModel : NewsViewModel
+@ExperimentalCoroutinesApi
+@ExperimentalPagingApi
+@AndroidEntryPoint
+class BreakingNewsFragment : Fragment() {
+    private val viewModel: NewsViewModel by viewModels()
+    private lateinit var binding: FragmentBreakingNewsBinding
     lateinit var newsAdapter: NewsAdapter
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentBreakingNewsBinding.inflate(layoutInflater)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = (activity as NewsActivity).viewModel
         setupRecyclerView()
-
-        viewModel.breakingNews.observe(viewLifecycleOwner, Observer{ response ->
-            when(response){
-                is Resource.Success ->{
-                    hideProgressBar()
-                    response.data?.let { newsResponse ->
-                        newsAdapter.differ.submitList(newsResponse.articles)
-                    }
-                }
-
-                is Resource.Error ->{
-                    hideProgressBar()
-                    response.message?.let {
-                        Log.e("BreakingNewsFragment",it.toString())
-                    }
-                }
-
-                is Resource.Loading ->{
-                    showProgressBar()
-                }
-            }
-        })
+        showDataOnView()
     }
 
-    private fun setupRecyclerView(){
-        newsAdapter = NewsAdapter()
-        rvBreakingNews.apply {
+    private fun setupRecyclerView() {
+        binding.rvBreakingNews.apply {
+            layoutManager = LinearLayoutManager(context)
+            setHasFixedSize(true)
+            newsAdapter = NewsAdapter(requireContext()) { article: Article ->
+                findNavController().navigate(
+                    BreakingNewsFragmentDirections.actionBreakingNewsFragmentToArticleNewsFragment(
+                        article
+                    )
+                )
+            }
             adapter = newsAdapter
-            layoutManager = LinearLayoutManager(activity)
         }
     }
 
-    private fun hideProgressBar(){
-        paginationProgressBar.visibility = View.INVISIBLE
+    private fun showDataOnView() {
+        viewModel.breakingNewsList.observe(viewLifecycleOwner) { result ->
+            when (result.status) {
+                Status.LOADING -> {
+                    showProgressBar()
+                }
+
+                Status.SUCCESS -> {
+                    hideProgressBar()
+                    result.data?.let { newsAdapter.submitList(it.articles) }
+
+                }
+            }
+        }
     }
 
-    private fun showProgressBar(){
-        paginationProgressBar.visibility = View.VISIBLE
+    private fun hideProgressBar() {
+        binding.paginationProgressBar.visibility = View.INVISIBLE
+        binding.rvBreakingNews.visibility = View.VISIBLE
+    }
+
+    private fun showProgressBar() {
+        binding.paginationProgressBar.visibility = View.VISIBLE
     }
 }

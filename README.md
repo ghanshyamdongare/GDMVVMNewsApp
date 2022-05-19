@@ -14,4 +14,4 @@ This is sample news application in kotlin
 13. LiveData with ViewModel LifeCycle
 14. Recyclerview 
 
-##Still in progress
+## Still in progress

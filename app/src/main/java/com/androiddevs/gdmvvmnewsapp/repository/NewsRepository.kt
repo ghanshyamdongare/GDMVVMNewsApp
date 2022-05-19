@@ -1,8 +1,10 @@
 package com.androiddevs.gdmvvmnewsapp.repository
 
-import com.androiddevs.gdmvvmnewsapp.api.RetrofitInstance
-import com.androiddevs.gdmvvmnewsapp.db.ArticleDatabase
+import com.androiddevs.gdmvvmnewsapp.models.NewsResponse
+import com.androiddevs.gdmvvmnewsapp.util.Resource
+import kotlinx.coroutines.flow.Flow
 
-class NewsRepository(val db: ArticleDatabase) {
-suspend fun getBreakingNews(countryCode: String, pageNumber : Int) = RetrofitInstance.api.getBreakingNews(countryCode,pageNumber)
+interface NewsRepository {
+    suspend fun getBreakingNews(country:String, pageNumber: Int): Flow<Resource<NewsResponse>>
 }
+

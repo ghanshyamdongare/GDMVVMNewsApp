@@ -1,25 +1,16 @@
 package com.androiddevs.gdmvvmnewsapp.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.setupWithNavController
-import com.androiddevs.gdmvvmnewsapp.R
-import com.androiddevs.gdmvvmnewsapp.db.ArticleDatabase
-import com.androiddevs.gdmvvmnewsapp.repository.NewsRepository
-import kotlinx.android.synthetic.main.activity_news.*
+import androidx.appcompat.app.AppCompatActivity
+import com.androiddevs.gdmvvmnewsapp.databinding.ActivityNewsBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class NewsActivity : AppCompatActivity() {
-    lateinit var viewModel: NewsViewModel
-
+    private lateinit var binding: ActivityNewsBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_news);
-
-        val newsRepository = NewsRepository(ArticleDatabase(this))
-        val viewModelProviderFactory = NewsViewModelProviderFactory(newsRepository)
-        viewModel = ViewModelProvider(this, viewModelProviderFactory).get(NewsViewModel::class.java)
-        bottomNavigationView.setupWithNavController(newsNavHostFragment.findNavController());
+        binding = ActivityNewsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
     }
 }

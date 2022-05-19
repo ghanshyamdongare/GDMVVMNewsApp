@@ -1,17 +1,18 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
-apply plugin: "androidx.navigation.safeargs.kotlin"
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+    id 'androidx.navigation.safeargs.kotlin'
+}
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    compileSdkVersion 32
 
     defaultConfig {
         applicationId "com.androiddevs.gdmvvmnewsapp"
         minSdkVersion 21
-        targetSdkVersion 29
+        targetSdkVersion 32
         versionCode 1
         versionName "1.0"
 
@@ -29,29 +30,28 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = '1.8'
+    }
+    viewBinding {
+        enabled true
     }
 }
-
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.core:core-ktx:1.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
-    // Architectural Components
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
-
-    // Room
-    implementation "androidx.room:room-runtime:2.2.5"
-    kapt "androidx.room:room-compiler:2.2.5"
-
-    // Kotlin Extensions and Coroutines support for Room
-    implementation "androidx.room:room-ktx:2.2.5"
+    //--Activity
+    def activity_version = "1.5.0-alpha03"
+    implementation "androidx.activity:activity-ktx:$activity_version"
 
     // Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.5'
@@ -61,16 +61,82 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.2.0"
 
-    // Retrofit
-    implementation 'com.squareup.retrofit2:retrofit:2.6.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.6.0'
+    //--Fragment
+    def fragment_version = "1.5.0-alpha03"
+    implementation "androidx.fragment:fragment-ktx:$fragment_version"
+    //--Hilt
+    def hilt_version = '2.39.1'
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+
+    //--Hilt ViewModel
+    def hilt_viewModels = "1.0.0-alpha03"
+    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hilt_viewModels"
+
+    //--LiveData and LifeCycle
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.1"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1"
+
+    //--Retrofit2
+    def retrofit_version = "2.9.0"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation "com.squareup.okhttp3:logging-interceptor:4.5.0"
 
-    // Navigation Components
-    implementation "androidx.navigation:navigation-fragment-ktx:2.2.1"
-    implementation "androidx.navigation:navigation-ui-ktx:2.2.1"
+    //--Paging3
+    def paging_version = "3.1.0"
+    implementation "androidx.paging:paging-runtime:$paging_version"
 
-    // Glide
-    implementation 'com.github.bumptech.glide:glide:4.11.0'
-    kapt 'com.github.bumptech.glide:compiler:4.11.0'
+    //--jetpack navigation component
+    def nav_version = "2.5.0-alpha03"
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-runtime-ktx:$nav_version"
+    debugImplementation "androidx.navigation:navigation-testing:$nav_version"
+
+    // Room
+    implementation "androidx.room:room-runtime:2.2.5"
+    kapt "androidx.room:room-compiler:2.2.5"
+
+    // Kotlin Extensions and Coroutines support for Room
+    implementation "androidx.room:room-ktx:2.2.5"
+
+    //--Swipe Refresh
+    def swipe_version = "1.1.0"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipe_version"
+
+    //--Glide
+    def glide_version = "4.12.0"
+    implementation "com.github.bumptech.glide:glide:$glide_version"
+    kapt "com.github.bumptech.glide:compiler:$glide_version"
+
+    //--Local Unit Tests
+    implementation "androidx.test:core:1.4.0"
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'com.google.truth:truth:1.0.1'
+    testImplementation 'org.mockito:mockito-core:4.3.1'
+    testImplementation 'org.mockito:mockito-inline:4.3.1'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0'
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
+    testImplementation 'com.squareup.okhttp3:mockwebserver:4.9.1'
+    testImplementation 'org.jetbrains.kotlin:kotlin-test-junit:1.5.31'
+
+    //--Instrumented Unit Tests
+    debugImplementation  'androidx.test:core:1.4.0'
+    debugImplementation  'androidx.test:runner:1.4.0'
+    debugImplementation  'androidx.test.espresso:espresso-core:3.4.0'
+    debugImplementation  'androidx.test.espresso:espresso-contrib:3.4.0'
+    implementation 'androidx.test.espresso:espresso-idling-resource:3.4.0'
+    debugImplementation  'androidx.test.ext:junit-ktx:1.1.3'
+    debugImplementation  'androidx.test.ext:junit:1.1.3'
+    debugImplementation  'androidx.test:rules:1.4.0'
+    debugImplementation  'com.google.truth:truth:1.0.1'
+    debugImplementation  'org.mockito:mockito-core:4.3.1'
+    debugImplementation  'org.mockito:mockito-android:4.3.1'
+    debugImplementation  'com.google.dagger:hilt-android-testing:2.39.1'
+    debugImplementation  'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0'
+    debugImplementation  "androidx.arch.core:core-testing:2.1.0"
+    debugImplementation  'org.jetbrains.kotlin:kotlin-test-junit:1.5.31'
+    kaptAndroidTest 'com.google.dagger:hilt-android-compiler:2.39.1'
+    debugImplementation 'androidx.fragment:fragment-testing:1.4.1'
 }

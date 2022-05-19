@@ -6,6 +6,12 @@
     android:layout_height="wrap_content"
     android:padding="8dp">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/cardview_dark_background"
+        tools:ignore="MissingConstraints" />
+
     <ImageView
         android:id="@+id/ivArticleImage"
         android:layout_width="160dp"
@@ -35,8 +41,8 @@
         android:textColor="@android:color/black"
         android:textSize="15sp"
         android:textStyle="bold"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/ivArticleImage"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
