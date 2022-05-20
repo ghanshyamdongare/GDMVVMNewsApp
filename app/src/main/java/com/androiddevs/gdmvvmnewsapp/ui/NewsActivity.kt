@@ -3,6 +3,8 @@ package com.androiddevs.gdmvvmnewsapp.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.androiddevs.gdmvvmnewsapp.databinding.ActivityNewsBinding
+import com.androiddevs.gdmvvmnewsapp.db.ArticleDatabase
+import com.androiddevs.gdmvvmnewsapp.repository.NewsRepository
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

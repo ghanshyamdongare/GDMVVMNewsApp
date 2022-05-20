@@ -1,17 +1,22 @@
 package com.androiddevs.gdmvvmnewsapp.repository
 
+import android.util.Log
+import androidx.lifecycle.LiveData
 import com.androiddevs.gdmvvmnewsapp.api.NewsAPI
+import com.androiddevs.gdmvvmnewsapp.db.ArticleDatabase
+import com.androiddevs.gdmvvmnewsapp.models.Article
 import com.androiddevs.gdmvvmnewsapp.models.NewsResponse
-import com.androiddevs.gdmvvmnewsapp.ui.NewsViewModel
 import com.androiddevs.gdmvvmnewsapp.util.Resource
-import dagger.Provides
-import dagger.hilt.InstallIn
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class NewsRepositoryImpl @Inject constructor(private val apiService: NewsAPI) : NewsRepository {
+class NewsRepositoryImpl @Inject constructor(
+    private val apiService: NewsAPI, private val database: ArticleDatabase
+) : NewsRepository {
+    val TAG: String = NewsRepositoryImpl::class.java.simpleName
 
+    // Repository API calls
     override suspend fun getBreakingNews(
         country: String,
         pageNumber: Int
@@ -22,6 +27,28 @@ class NewsRepositoryImpl @Inject constructor(private val apiService: NewsAPI) : 
         } catch (e: Exception) {
             emit(Resource.error("Check network connection", null))
         }
+    }
+
+    // Repository database calls
+    override suspend fun upsert(article: Article): Flow<Long> = flow {
+        try {
+            val returnValue: Long = database.getArticleDao().upsert(article)
+            emit(returnValue)
+        } catch (e: Exception) {
+            emit(-1)
+        }
+    }
+
+    override fun getAllArticles(): Flow<LiveData<List<Article>>> = flow {
+        try {
+            emit(database.getArticleDao().getAllArticles())
+        } catch (e: Exception) {
+            Log.d(TAG, e.message.toString())
+        }
+    }
+
+    override suspend fun deleteArticle(article: Article) {
+        TODO("Not yet implemented")
     }
 
 }

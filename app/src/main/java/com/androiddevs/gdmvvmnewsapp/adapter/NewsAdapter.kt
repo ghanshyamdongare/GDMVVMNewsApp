@@ -16,6 +16,7 @@ class NewsAdapter @Inject constructor(
     @ApplicationContext val context: Context,
     private val clicked: (Article) -> Unit
 ) : ListAdapter<Article, NewsAdapter.ArticleViewHolder>(DiffCallback) {
+    private var onItemClickListener: ((Article) -> Unit)? = null
 
     inner class ArticleViewHolder(
         private val binding: ItemArticlePreviewBinding
@@ -52,57 +53,14 @@ class NewsAdapter @Inject constructor(
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
         val article = getItem(position)
         holder.bind(article)
+        holder.itemView.apply {
+            setOnClickListener {
+                onItemClickListener?.let { it(article) }
+            }
+        }
+    }
+
+    fun setOnItemClickListener(listener: (Article) -> Unit) {
+        onItemClickListener = listener
     }
 }
-
-
-//=====================================================================
-
-//
-//class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
-//
-//    inner class ArticleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
-//
-//    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleViewHolder {
-//        return ArticleViewHolder(
-//            LayoutInflater.from(parent.context).inflate(R.layout.item_article_preview,parent,false)
-//        )
-//    }
-//
-//    override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
-//        val article = differ.currentList[position]
-//        holder.itemView.apply {
-//            Glide.with(this).load(article.urlToImage).into(ivArticleImage)
-//            tvSource.text = article.source.name
-//            tvDescription.text = article.description
-//            tvPublishedAt.text = article.publishedAt
-//
-//            onItemClickListener?.let {
-//                it(article)
-//            }
-//        }
-//    }
-//
-//    private var onItemClickListener :((Article)-> Unit)? = null
-//
-//    fun setOnItemClickListener(listener : (Article) -> Unit){
-//        onItemClickListener = listener
-//    }
-//
-//    override fun getItemCount(): Int {
-//        return differ.currentList.size
-//    }
-//
-//    private val differentCallback = object : DiffUtil.ItemCallback<Article>() {
-//        override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean {
-//            return oldItem.url == newItem.url
-//        }
-//
-//        override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean {
-//            return oldItem == newItem
-//        }
-//    }
-//
-//    val differ = AsyncListDiffer(this,differentCallback)
-//
-//}
