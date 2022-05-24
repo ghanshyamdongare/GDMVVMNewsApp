@@ -22,8 +22,8 @@ class NewsViewModel @Inject constructor(private val newsRepository: NewsReposito
     val breakingNewsList: LiveData<Resource<NewsResponse>> = _breakingNewsList
     private val TAG = NewsViewModel::class.java.simpleName;
 
-    private val _allDBData : MutableLiveData<List<Article>> = MutableLiveData()
-    val allDBData : LiveData<List<Article>> = _allDBData
+    private var _allDBData: MutableLiveData<List<Article>> = MutableLiveData()
+    var allDBData: LiveData<List<Article>> = _allDBData
 
     init {
         getBreakingNews("in", 1)
@@ -34,7 +34,7 @@ class NewsViewModel @Inject constructor(private val newsRepository: NewsReposito
     fun getBreakingNews(countryCode: String, breakingNewsPage: Int) {
         viewModelScope.launch {
             newsRepository.getBreakingNews(countryCode, breakingNewsPage).collect {
-                _breakingNewsList.value = it;
+                _breakingNewsList.value = it
             }
         }
     }
@@ -47,10 +47,11 @@ class NewsViewModel @Inject constructor(private val newsRepository: NewsReposito
         }
     }
 
-    fun getAllDBRecords() {
+    private fun getAllDBRecords() {
         viewModelScope.launch {
-            newsRepository.getAllArticles().collect { allDBData ->
-                _allDBData.value = allDBData.value
+            newsRepository.getAllArticles().collect {
+                Log.e(TAG, "Article fetched from SQLite DB" + it.toString())
+                allDBData = it
             }
         }
     }

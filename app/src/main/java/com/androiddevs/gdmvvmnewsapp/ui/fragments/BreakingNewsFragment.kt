@@ -10,7 +10,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.paging.ExperimentalPagingApi
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import com.androiddevs.gdmvvmnewsapp.adapter.NewsAdapter
 import com.androiddevs.gdmvvmnewsapp.databinding.FragmentBreakingNewsBinding
 import com.androiddevs.gdmvvmnewsapp.models.Article
@@ -81,9 +80,11 @@ class BreakingNewsFragment : Fragment() {
         }
     }
 
-    private fun getAllDataSQlite(){
-        viewModel.allDBData.observe(viewLifecycleOwner){ result ->
-            Log.d(TAG, result.toString())
+    private fun getAllDataSQlite() {
+        viewModel.allDBData.observe(viewLifecycleOwner) { result ->
+            result?.toString()?.let {
+                Log.d(TAG, it)
+            }
         }
     }
 

@@ -14,8 +14,8 @@ interface NewsRepository {
     // API operations
     suspend fun getBreakingNews(country: String, pageNumber: Int): Flow<Resource<NewsResponse>>
 
-    // database operations
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    // database operations to insert a new row update the existing one
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun upsert(article: Article): Flow<Long>
 
     @Query("SELECT * FROM articles")

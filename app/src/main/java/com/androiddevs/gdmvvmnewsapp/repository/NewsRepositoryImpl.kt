@@ -35,20 +35,23 @@ class NewsRepositoryImpl @Inject constructor(
             val returnValue: Long = database.getArticleDao().upsert(article)
             emit(returnValue)
         } catch (e: Exception) {
-            emit(-1)
+            emit(-1.toLong())
         }
     }
 
     override fun getAllArticles(): Flow<LiveData<List<Article>>> = flow {
         try {
-            emit(database.getArticleDao().getAllArticles())
+            val allArticles: LiveData<List<Article>> =
+                database.getArticleDao().getAllArticles()
+            emit(allArticles)
         } catch (e: Exception) {
             Log.d(TAG, e.message.toString())
         }
     }
 
     override suspend fun deleteArticle(article: Article) {
-        TODO("Not yet implemented")
+        val deletedInt: Int = database.getArticleDao().deleteArticle(article)
+        Log.e(TAG, "Successfully deleted the Article from DB $deletedInt")
     }
 
 }

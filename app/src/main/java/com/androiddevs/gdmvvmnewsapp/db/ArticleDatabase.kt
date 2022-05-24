@@ -12,6 +12,7 @@ import com.androiddevs.gdmvvmnewsapp.models.Article
 
 @TypeConverters(Converters::class)
 
+
 abstract class ArticleDatabase : RoomDatabase() {
     abstract fun getArticleDao(): ArticleDao
 
