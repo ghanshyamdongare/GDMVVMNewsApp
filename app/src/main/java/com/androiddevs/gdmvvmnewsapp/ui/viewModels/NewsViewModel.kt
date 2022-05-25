@@ -1,4 +1,4 @@
-package com.androiddevs.gdmvvmnewsapp.ui
+package com.androiddevs.gdmvvmnewsapp.ui.viewModels
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -20,6 +20,7 @@ import javax.inject.Inject
 class NewsViewModel @Inject constructor(private val newsRepository: NewsRepository) : ViewModel() {
     private val _breakingNewsList: MutableLiveData<Resource<NewsResponse>> = MutableLiveData()
     val breakingNewsList: LiveData<Resource<NewsResponse>> = _breakingNewsList
+
     private val TAG = NewsViewModel::class.java.simpleName;
 
     private var _allDBData: MutableLiveData<List<Article>> = MutableLiveData()

@@ -2,6 +2,7 @@ package com.androiddevs.gdmvvmnewsapp.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -14,9 +15,9 @@ import javax.inject.Inject
 
 class NewsAdapter @Inject constructor(
     @ApplicationContext val context: Context,
+    val isFromBreakingNews: Boolean,
     private val clicked: (Article) -> Unit
 ) : ListAdapter<Article, NewsAdapter.ArticleViewHolder>(DiffCallback) {
-    private var onItemClickListener: ((Article) -> Unit)? = null
 
     inner class ArticleViewHolder(
         private val binding: ItemArticlePreviewBinding
@@ -27,6 +28,23 @@ class NewsAdapter @Inject constructor(
             binding.tvSource.text = article?.source?.name
             binding.tvDescription.text = article?.description
             binding.tvPublishedAt.text = article?.publishedAt
+            if (isFromBreakingNews) {
+                binding.btnSave.visibility = View.VISIBLE
+            } else {
+                binding.btnSave.visibility = View.GONE
+            }
+
+            binding.root.setOnClickListener {
+                article?.let { article -> clicked.invoke(article) }
+            }
+
+            binding.btnSave.setOnClickListener {
+                onSaveClickListener?.let {
+                    if (article != null) {
+                        it(article)
+                    }
+                }
+            }
         }
     }
 
@@ -53,14 +71,11 @@ class NewsAdapter @Inject constructor(
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
         val article = getItem(position)
         holder.bind(article)
-        holder.itemView.apply {
-            setOnClickListener {
-                onItemClickListener?.let { it(article) }
-            }
-        }
     }
 
-    fun setOnItemClickListener(listener: (Article) -> Unit) {
-        onItemClickListener = listener
+    private var onSaveClickListener: ((Article) -> Unit)? = null
+
+    fun setOnSaveClickListener(listener: (Article) -> Unit) {
+        onSaveClickListener = listener
     }
 }

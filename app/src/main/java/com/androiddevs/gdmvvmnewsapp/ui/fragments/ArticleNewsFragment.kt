@@ -4,8 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.androiddevs.gdmvvmnewsapp.R
-import com.androiddevs.gdmvvmnewsapp.ui.NewsActivity
-import com.androiddevs.gdmvvmnewsapp.ui.NewsViewModel
+import com.androiddevs.gdmvvmnewsapp.ui.viewModels.NewsViewModel
 
 class ArticleNewsFragment : Fragment(R.layout.fragment_breaking_news) {
     lateinit var viewModel : NewsViewModel

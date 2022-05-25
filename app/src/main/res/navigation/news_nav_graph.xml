@@ -1,58 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/news_nav_graph"
     app:startDestination="@id/breakingNewsFragment">
 
     <fragment
         android:id="@+id/breakingNewsFragment"
         android:name="com.androiddevs.gdmvvmnewsapp.ui.fragments.BreakingNewsFragment"
-        android:label="BreakingNewsFragment" >
+        android:label="BreakingNewsFragment"
+        tools:layout="@layout/fragment_breaking_news">
         <action
-            android:id="@+id/action_breakingNewsFragment_to_articleNewsFragment"
-            app:destination="@id/articleNewsFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim= "@anim/slide_in_left"
-            app:popExitAnim= "@anim/slide_out_right"/>
+            android:id="@+id/action_breakingNewsFragment_to_articleDetailsFragment"
+            app:destination="@id/articleDetailsFragment" />
     </fragment>
+
     <fragment
-        android:id="@+id/searchNewsFragment"
-        android:name="com.androiddevs.gdmvvmnewsapp.ui.fragments.SearchNewsFragment"
-        android:label="SearchNewsFragment" >
-        <action
-            android:id="@+id/action_searchNewsFragment_to_articleNewsFragment"
-            app:destination="@id/articleNewsFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim= "@anim/slide_in_left"
-            app:popExitAnim= "@anim/slide_out_right"/>
-        <action
-            android:id="@+id/action_searchNewsFragment_to_articleNewsFragment2"
-            app:destination="@id/articleNewsFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim= "@anim/slide_in_left"
-            app:popExitAnim= "@anim/slide_out_right"/>
+        android:id="@+id/articleDetailsFragment"
+        android:name="com.androiddevs.gdmvvmnewsapp.ui.fragments.ArticleDetailsFragment"
+        android:label="fragment_article_details"
+        tools:layout="@layout/fragment_article_details">
+<!--        <argument-->
+<!--            android:name="article"-->
+<!--            app:argType="com.androiddevs.gdmvvmnewsapp.models.Article" />-->
     </fragment>
     <fragment
         android:id="@+id/savedNewsFragment"
         android:name="com.androiddevs.gdmvvmnewsapp.ui.fragments.SavedNewsFragment"
-        android:label="SavedNewsFragment" >
+        android:label="SavedNewsFragment">
         <action
-            android:id="@+id/action_savedNewsFragment_to_articleNewsFragment"
-            app:destination="@id/articleNewsFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim= "@anim/slide_in_left"
-            app:popExitAnim= "@anim/slide_out_right"/>
-    </fragment>
-    <fragment
-        android:id="@+id/articleNewsFragment"
-        android:name="com.androiddevs.gdmvvmnewsapp.ui.fragments.ArticleNewsFragment"
-        android:label="ArticleNewsFragment">
-        <argument
-            android:name="article"
-            app:argType="com.androiddevs.gdmvvmnewsapp.models.Article" />
+            android:id="@+id/action_savedNewsFragment_to_articleDetailsFragment"
+            app:destination="@id/articleDetailsFragment" />
     </fragment>
 </navigation>

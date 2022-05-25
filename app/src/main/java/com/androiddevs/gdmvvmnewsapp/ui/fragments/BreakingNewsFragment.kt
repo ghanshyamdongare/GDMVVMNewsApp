@@ -1,7 +1,6 @@
 package com.androiddevs.gdmvvmnewsapp.ui.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,10 +12,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.androiddevs.gdmvvmnewsapp.adapter.NewsAdapter
 import com.androiddevs.gdmvvmnewsapp.databinding.FragmentBreakingNewsBinding
 import com.androiddevs.gdmvvmnewsapp.models.Article
-import com.androiddevs.gdmvvmnewsapp.ui.NewsViewModel
+import com.androiddevs.gdmvvmnewsapp.ui.viewModels.NewsViewModel
 import com.androiddevs.gdmvvmnewsapp.util.Status
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import java.util.*
 
 @ExperimentalCoroutinesApi
 @ExperimentalPagingApi
@@ -40,11 +41,12 @@ class BreakingNewsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
         showDataOnView()
-        getAllDataSQlite()
 
-        newsAdapter.setOnItemClickListener {
-            Log.d(TAG, "Clicked item title is : " + it.title)
+        newsAdapter.setOnSaveClickListener {
+            it.savedDateTime = Calendar.getInstance().time.time
+            // Save article in database
             viewModel.upsertArticle(it)
+            Snackbar.make(view, "Article saved successfully", Snackbar.ANIMATION_MODE_SLIDE).show()
         }
     }
 
@@ -52,17 +54,21 @@ class BreakingNewsFragment : Fragment() {
         binding.rvBreakingNews.apply {
             layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
-            newsAdapter = NewsAdapter(requireContext()) { article: Article ->
-                findNavController().navigate(
-                    BreakingNewsFragmentDirections.actionBreakingNewsFragmentToArticleNewsFragment(
-                        article
-                    )
-                )
-            }
+            newsAdapter = NewsAdapter(requireContext(), true) { article: Article ->
 
+//                Log.d(TAG, article.title.toString())
+//                val bundle = Bundle().apply {
+//                    putSerializable("article", article)
+//                }
+
+                findNavController().navigate(BreakingNewsFragmentDirections.actionBreakingNewsFragmentToArticleDetailsFragment())
+//                findNavController().navigate(
+//                    R.id.action_breakingNewsFragment_to_articleDetailsFragment,
+//                    bundle
+//                )
+            }
             adapter = newsAdapter
         }
-
     }
 
     private fun showDataOnView() {
@@ -80,14 +86,6 @@ class BreakingNewsFragment : Fragment() {
         }
     }
 
-    private fun getAllDataSQlite() {
-        viewModel.allDBData.observe(viewLifecycleOwner) { result ->
-            result?.toString()?.let {
-                Log.d(TAG, it)
-            }
-        }
-    }
-
     private fun hideProgressBar() {
         binding.paginationProgressBar.visibility = View.INVISIBLE
         binding.rvBreakingNews.visibility = View.VISIBLE
@@ -96,4 +94,6 @@ class BreakingNewsFragment : Fragment() {
     private fun showProgressBar() {
         binding.paginationProgressBar.visibility = View.VISIBLE
     }
+
+
 }
